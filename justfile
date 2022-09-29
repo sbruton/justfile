@@ -10,9 +10,10 @@ backup-s3 ts dir bucket handle:
     aws s3 sync s3://{{bucket}}/ backup/{{handle}}.{{ts}}/
 
 # Build for local target
-build ts dir *FLAGS: check_toolchain
+build ts dir *FLAGS:
     #!/usr/bin/env bash
     set -euxo pipefail
+    just -f {{absolute_path("justfile")}} check_toolchain {{ts}} {{dir}}
     cd {{dir}}
     cargo build {{FLAGS}}
 
