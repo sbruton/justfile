@@ -106,26 +106,32 @@ infra dir *FLAGS: check_terraform
 
 # Install homebrew using direct download (macos only)
 install_brew:
+    just -f {{absolute_path("log.justfile")}} info "Installing homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install GitHub CLI using homebrew (macos) or apt (linux)
 @install_gh:
+    just -f {{absolute_path("log.justfile")}} info "Installing github cli"
     just -f {{os()}}.justfile install_gh
 
 # Install packer using homebrew (macos) or apt (linux)
 @install_packer:
+    just -f {{absolute_path("log.justfile")}} info "Installing packer"
     just -f {{os()}}.justfile install_just
 
 # Install Rust via rustup using homebrew (macos) or direct download (linux)
 @install_rust:
+    just -f {{absolute_path("log.justfile")}} info "Installing rust"
     just -f {{os()}}.justfile install_rust
 
 # Install semver cli utility using cargo
 install_semver:
+    just -f {{absolute_path("log.justfile")}} info "Installing semver"
     cargo install semver-util
 
 # Install terraform using homebrew (macos) or apt (linux)
 @install_terraform:
+    just -f {{absolute_path("log.justfile")}} info "Installing terraform"
     just -f {{os()}}.justfile install_terraform
 
 # Publish Amazon Machine Image to all US regions
