@@ -16,7 +16,7 @@ ts := `gdate -u +%Y-%m-%dT%H:%M:%S.%6NZ || date -u +%Y-%m-%dT%H:%M:%S.%6NZ`
 
 # Run a method from shared justfile
 @_shared cmd *FLAGS: _sync
-    just -f .cache/justfile {{cmd}} {{ts}} `pwd`
+    just -f .cache/justfile {{cmd}} {{ts}} `pwd` {{FLAGS}}
 
 # Sync shared justfile
 _sync:
