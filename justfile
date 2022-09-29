@@ -266,7 +266,7 @@ _build-target ts dir target *FLAGS:
     set -euxo pipefail
     just -f {{absolute_path("log.justfile")}} info "Building for {{target}}"
     cd {{dir}}
-    just -f {{absolute_path("justfile")}} build {{dir}} --release --target {{target}} {{FLAGS}}
+    just -f {{absolute_path("justfile")}} build {{ts}} {{dir}} --release --target {{target}} {{FLAGS}}
 
 _stage_artifact ts dir tag arch bin:
     #!/usr/bin/env bash
