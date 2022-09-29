@@ -131,13 +131,13 @@ check ts dir:
 
 # Check entire toolchain and install all missing components
 @check_toolchain ts dir:
-    just -f {{absolute_path("log.justfile")}} check_brew {{ts}} {{dir}}
-    just -f {{absolute_path("log.justfile")}} check_gh {{ts}} {{dir}}
-    just -f {{absolute_path("log.justfile")}} check_rust {{ts}} {{dir}}
-    just -f {{absolute_path("log.justfile")}} check_packer {{ts}} {{dir}}
-    just -f {{absolute_path("log.justfile")}} check_terraform {{ts}} {{dir}}
-    just -f {{absolute_path("log.justfile")}} check_semver {{ts}} {{dir}}
-    just -f {{absolute_path("log.justfile")}} check_trunk {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_brew {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_gh {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_rust {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_packer {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_terraform {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_semver {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check_trunk {{ts}} {{dir}}
 
 # Remove all build artifacts
 clean ts dir:
