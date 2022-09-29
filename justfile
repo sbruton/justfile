@@ -54,8 +54,8 @@ build-linux-armv7-gnu dir *FLAGS: check_toolchain
 build-linux-x86-gnu dir *FLAGS: check_toolchain
     CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=x86_64-unknown-linux-gnu-gcc \
     AR_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-ar \
-    CC_x64_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-gcc \
-    CXX_x64_64_unknown_linux_gnu=x64_64-unknown-linux-gnu-g++ \
+    CC_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-gcc \
+    CXX_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-g++ \
         just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
