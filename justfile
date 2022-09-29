@@ -1,26 +1,6 @@
 # minimum rustc version supported
 _rust_min := "1.60.0"
 
-# Install GitHub CLI using homebrew (macos) or apt (linux)
-@install_gh:
-    just -f {{os()}}.justfile install_gh
-
-# Install Rust via rustup, the latter installed using homebrew (macos) or direct download (linux)
-@install_rust:
-    just -f {{os()}}.justfile install_rust
-
-# Install semver cli utility using cargo
-install_semver:
-    cargo install semver-util
-
-# Update rust toolchain for all supported versions
-update_rust:
-    rustup update
-    @for rust_version in $(semver seq --minor --minor-max 100 {{_rust_min}} `rustc --version | awk '{print $2}'`); do \
-        just -f {{absolute_path("log.justfile")}} info "Updating rustc v${rust_version}"; \
-        cargo +$rust_version version 2>&1 > /dev/null || rustup toolchain install $rust_version; \
-    done
-
 # Build for local target
 build dir *FLAGS: check_toolchain
     #!/usr/bin/env bash
@@ -105,6 +85,18 @@ clean dir:
     cargo clean
     if [[ -d dist ]]; then rm -rf dist; fi
 
+# Install GitHub CLI using homebrew (macos) or apt (linux)
+@install_gh:
+    just -f {{os()}}.justfile install_gh
+
+# Install Rust via rustup, the latter installed using homebrew (macos) or direct download (linux)
+@install_rust:
+    just -f {{os()}}.justfile install_rust
+
+# Install semver cli utility using cargo
+install_semver:
+    cargo install semver-util
+
 # Publish binaries to GitHub release associated with current tag
 publish-bins dir:
     #!/usr/bin/env bash
@@ -127,6 +119,14 @@ publish-bins dir:
     set -e
     cd -
     gh release upload $tag dist/*
+
+# Update rust toolchain for all supported versions
+update_rust:
+    rustup update
+    @for rust_version in $(semver seq --minor --minor-max 100 {{_rust_min}} `rustc --version | awk '{print $2}'`); do \
+        just -f {{absolute_path("log.justfile")}} info "Updating rustc v${rust_version}"; \
+        cargo +$rust_version version 2>&1 > /dev/null || rustup toolchain install $rust_version; \
+    done
 
 _stage_artifact dir tag arch bin:
     #!/usr/bin/env bash
