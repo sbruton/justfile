@@ -61,9 +61,9 @@ build-linux-x86-gnu dir *FLAGS: check_toolchain
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
 build-windows-x86-gnu dir *FLAGS: check_toolchain
     CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc \
-    AR_x86_64_unknown_linux_gnu=x86_64-w64-mingw32-ar \
-    CC_x64_64_unknown_linux_gnu=x86_64-w64-mingw32-gcc \
-    CXX_x64_64_unknown_linux_gnu=x86_64-w64-mingw32-g++ \
+    AR_x86_64_pc_windows_gnu=x86_64-w64-mingw32-ar \
+    CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc \
+    CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++ \
         just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
 
 # Run all lints and tests
