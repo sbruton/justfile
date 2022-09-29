@@ -105,6 +105,7 @@ check dir: check_toolchain
 @check_rust:
     just -f {{absolute_path("log.justfile")}} info "Checking for rust"
     type rustc 2>&1 > /dev/null || just install_rust
+    type cargo-next 2>&1 > /dev/null || cargo install --locked cargo-next
     semver compare `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust || true 2>&1 > /dev/null
 
 # Install semver if missing
@@ -184,7 +185,7 @@ install_semver:
     cargo install trunk
 
 # Publish Amazon Machine Image to all US regions
-publish-ami-us dir artifact:
+publish-ami-us dir artifact tag:
     #!/usr/bin/env bash
     set -euxo pipefail
     cd {{dir}}
@@ -192,11 +193,11 @@ publish-ami-us dir artifact:
     packer init .
     packer fmt .
     packer validate \
-        --var ami_version=`cd .. && cargo next --get` \
+        --var ami_version={{tag}} \
         --var ami_build_tag=`aarch64-unknown-linux-gnu-readelf -n ../target/aarch64-unknown-linux-gnu/release/$artifact | perl -0pe 's/.+\.note\.gnu\.build-id//smg' | perl -0pe 's/.+Build ID: //smg'` \
         .
     packer build \
-        --var ami_version=`cd .. && cargo next --get` \
+        --var ami_version={{tag}} \
         --var ami_build_tag=`aarch64-unknown-linux-gnu-readelf -n ../target/aarch64-unknown-linux-gnu/release/$artifact | perl -0pe 's/.+\.note\.gnu\.build-id//smg' | perl -0pe 's/.+Build ID: //smg'` \
         .
 
