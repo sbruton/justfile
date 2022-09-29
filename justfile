@@ -22,7 +22,7 @@ build dir *FLAGS: check_toolchain
 _build-target dir target *FLAGS:
     #!/usr/bin/env bash
     set -euxo pipefail
-    just -f {{asbsolute_path("log.justfile")}} info "Building for {{target}}"
+    just -f {{absolute_path("log.justfile")}} info "Building for {{target}}"
     cd {{dir}}
     just -f {{absolute_path("justfile")}} build {{dir}} --release --target {{target}} {{FLAGS}}
 
@@ -59,33 +59,33 @@ check dir: check_toolchain
 
 # Install Homebrew if missing (macos only)
 @check_brew:
-    just -f {{asbsolute_path("log.justfile")}} info "Checking for homebrew"
+    just -f {{absolute_path("log.justfile")}} info "Checking for homebrew"
     type brew 2>&1 > /dev/null || just install_brew
 
 # Install GitHub CLI if missing
 @check_gh:
-    just -f {{asbsolute_path("log.justfile")}} info "Checking for github cli"
+    just -f {{absolute_path("log.justfile")}} info "Checking for github cli"
     type gh 2>&1 > /dev/null || just install_gh
 
 # Install packer if missing
 @check_packer:
-    just -f {{asbsolute_path("log.justfile")}} info "Checking for packer"
+    just -f {{absolute_path("log.justfile")}} info "Checking for packer"
     type packer 2>&1 > /dev/null || just install_packer
 
 # Install Rust if missing
 @check_rust:
-    just -f {{asbsolute_path("log.justfile")}} info "Checking for rust"
+    just -f {{absolute_path("log.justfile")}} info "Checking for rust"
     type rustc 2>&1 > /dev/null || just install_rust
     semver compare `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust
 
 # Install semver if missing
 @check_semver:
-    just -f {{asbsolute_path("log.justfile")}} info "Checking for semver"
+    just -f {{absolute_path("log.justfile")}} info "Checking for semver"
     type semver 2>&1 > /dev/null || just install_semver
 
 # Install terraform if missing
 @check_terraform:
-    just -f {{asbsolute_path("log.justfile")}} info "Checking for terraform"
+    just -f {{absolute_path("log.justfile")}} info "Checking for terraform"
     type terraform 2>&1 > /dev/null || just install_terraform
 
 # Check entire toolchain and install all missing components
