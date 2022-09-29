@@ -28,12 +28,12 @@ build ts dir *FLAGS:
 # Build for Apple macOS targeting the 64-bit Apple ISA (e.g., Apple Silicon Macs)
 build-apple-arm ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check_toolchain {{ts}} {{dir}} 
-    just -f {{absolute_path("justfile")}} _build-target {{dir}} aarch64-apple-darwin {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} aarch64-apple-darwin {{FLAGS}}
 
 # Build for Apple macOS targeting the 64-bit x86 (amd64) ISA (e.g., Legacy Intel Macs)
 build-apple-x86 ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check_toolchain {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-apple-darwin {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} x86_64-apple-darwin {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit ARMv8 (AArch64) ISA (e.g., AWS Graviton)
 build-linux-arm-gnu ts dir *FLAGS:
@@ -43,7 +43,7 @@ build-linux-arm-gnu ts dir *FLAGS:
     CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
     CXX_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-        just -f {{absolute_path("justfile")}} _build-target {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
+        just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
 build-linux-armv7-gnu ts dir *FLAGS:
@@ -53,7 +53,7 @@ build-linux-armv7-gnu ts dir *FLAGS:
     CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
     CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-    just -f {{absolute_path("justfile")}} _build-target {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit x86 (amd64) ISA (e.g., Intel/AMD PCs)
 build-linux-x86-gnu ts dir *FLAGS:
@@ -63,7 +63,7 @@ build-linux-x86-gnu ts dir *FLAGS:
     CC_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-gcc \
     CXX_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-        just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
+        just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
 # Build for VMs providing a WASM32 ISA (e.g., web browsers)
 build-wasm32 ts dir *FLAGS:
@@ -81,7 +81,7 @@ build-windows-x86-gnu ts dir *FLAGS:
     CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc \
     CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-        just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
+        just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
 
 # Run all lints and tests
 check ts dir:
