@@ -184,19 +184,21 @@ install_semver:
     cargo install trunk
 
 # Publish Amazon Machine Image to all US regions
-publish-ami-us dir:
-    cd {{dir}} && packer init .
-    cd {{dir}} && packer fmt .
-    cd {{dir}} && \
-        packer validate \
-            --var ami_version=`cd .. && cargo next --get` \
-            --var ami_build_tag=`aarch64-unknown-linux-gnu-readelf -n ../target/aarch64-unknown-linux-gnu/release/daemon | perl -0pe 's/.+\.note\.gnu\.build-id//smg' | perl -0pe 's/.+Build ID: //smg'` \
-            .
-    cd {{dir}} && \
-        packer build \
-            --var ami_version=`cd .. && cargo next --get` \
-            --var ami_build_tag=`aarch64-unknown-linux-gnu-readelf -n ../target/aarch64-unknown-linux-gnu/release/daemon | perl -0pe 's/.+\.note\.gnu\.build-id//smg' | perl -0pe 's/.+Build ID: //smg'` \
-            .
+publish-ami-us dir artifact:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    cd {{dir}}
+    artifact="{{artifact}}"
+    packer init .
+    packer fmt .
+    packer validate \
+        --var ami_version=`cd .. && cargo next --get` \
+        --var ami_build_tag=`aarch64-unknown-linux-gnu-readelf -n ../target/aarch64-unknown-linux-gnu/release/$artifact | perl -0pe 's/.+\.note\.gnu\.build-id//smg' | perl -0pe 's/.+Build ID: //smg'` \
+        .
+    packer build \
+        --var ami_version=`cd .. && cargo next --get` \
+        --var ami_build_tag=`aarch64-unknown-linux-gnu-readelf -n ../target/aarch64-unknown-linux-gnu/release/$artifact | perl -0pe 's/.+\.note\.gnu\.build-id//smg' | perl -0pe 's/.+Build ID: //smg'` \
+        .
 
 # Publish binaries to GitHub release associated with current tag
 publish-bins dir:
