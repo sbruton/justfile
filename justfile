@@ -228,7 +228,7 @@ publish-bins dir:
 snapshot-s3 dir from_bucket to_bucket:
     #!/usr/bin/env bash
     set -euxo pipefail
-    just -f {{absolute_path("justfile")}} backup-s3 {{dir}} {{from_bucket}} {{handle}}
+    just -f {{absolute_path("justfile")}} backup-s3 {{dir}} {{from_bucket}} {{from_bucket}}
     cd {{dir}}
     aws s3 sync backup/{{from_bucket}}.{{ts}}/ s3://{{to_bucket}}/{{from_bucket}}.{{ts}}/
 
