@@ -4,6 +4,14 @@ _rust_min := "1.60.0"
 # timestamp when just action executed, use gdate from brew:coreutils on macos
 ts := `gdate -u +%Y-%m-%dT%H:%M:%S.%6NZ || date -u +%Y-%m-%dT%H:%M:%S.%6NZ`
 
+# Backup an S3 bucket
+backup-s3 dir bucket handle:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    cd {{dir}}
+    mkdir -p backup/web.{{ts}}
+    aws s3 sync s3://{{bucket}}/ backup/{{handle}}.{{ts}}/
+
 # Build for local target
 build dir *FLAGS: check_toolchain
     #!/usr/bin/env bash
@@ -18,13 +26,6 @@ build dir *FLAGS: check_toolchain
     just build-linux-x86-gnu {{dir}}
     just build-linux-arm-gnu {{dir}}
     just build-windows-x86-gnu {{dir}}
-
-_build-target dir target *FLAGS:
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    just -f {{absolute_path("log.justfile")}} info "Building for {{target}}"
-    cd {{dir}}
-    just -f {{absolute_path("justfile")}} build {{dir}} --release --target {{target}} {{FLAGS}}
 
 # Build for Apple macOS targeting the 64-bit Apple ISA (e.g., Apple Silicon Macs)
 build-apple-arm dir *FLAGS: check_toolchain 
@@ -61,6 +62,13 @@ build-linux-x86-gnu dir *FLAGS: check_toolchain
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
         just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
+# Build for VMs providing a WASM32 ISA (e.g., web browsers)
+build-wasm32 dir *FLAGS: check_toolchain
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    cd {{dir}}
+    trunk build --release {{FLAGS}}
+
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
 build-windows-x86-gnu dir *FLAGS: check_toolchain
     CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc \
@@ -81,6 +89,7 @@ check dir: check_toolchain
 @check_brew:
     just -f {{absolute_path("log.justfile")}} info "Checking for homebrew"
     type brew 2>&1 > /dev/null || just install_brew
+    if [[ "{{os()}}" == "macos" ]]; then type gdate 2>&1 > /dev/null || brew install coreutils; fi
 
 # Install GitHub CLI if missing
 @check_gh:
@@ -108,8 +117,13 @@ check dir: check_toolchain
     just -f {{absolute_path("log.justfile")}} info "Checking for terraform"
     type terraform 2>&1 > /dev/null || just install_terraform
 
+# Install trunk if missing
+@check_trunk:
+    just -f {{absolute_path("log.justfile")}} info "Checking for trunk"
+    type trunk 2>&1 > /dev/null || just install_trunk
+
 # Check entire toolchain and install all missing components
-@check_toolchain: check_brew check_gh check_rust check_packer check_terraform check_semver
+@check_toolchain: check_brew check_gh check_rust check_packer check_terraform check_semver check_trunk
 
 # Remove all build artifacts
 clean dir:
@@ -118,6 +132,16 @@ clean dir:
     cd {{dir}}
     cargo clean
     if [[ -d dist ]]; then rm -rf dist; fi
+
+# Deploy a web app to AWS S3 and CloudFront
+deploy-web dir bucket distribution:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    cd {{dir}}
+    trunk build --release
+    just -f {{absolute_path("justfile")}} snapshot-s3 {{dir}}
+    aws s3 sync dist/ s3://{{bucket}}/
+    just -f {{absolute_path("justfile")}} web-cache-invalidate {{dir}} {{distribution}}
 
 # Update infrastructure using terraform
 infra dir *FLAGS: check_terraform
@@ -153,6 +177,11 @@ install_semver:
 @install_terraform:
     just -f {{absolute_path("log.justfile")}} info "Installing terraform"
     just -f {{os()}}.justfile install_terraform
+
+# Install trunk using cargo
+@install_trunk:
+    just -f {{absolute_path("log.justfile")}} info "Installing trunk"
+    cargo install trunk
 
 # Publish Amazon Machine Image to all US regions
 publish-ami-us dir:
@@ -192,6 +221,14 @@ publish-bins dir:
     cd - 2>&1 > /dev/null
     gh release upload $tag dist/*
 
+# Create a timestamped snapshot of an s3 bucket in a different bucket
+snapshot-s3 dir from_bucket to_bucket handle:
+     #!/usr/bin/env bash
+    set -euxo pipefail
+    just -f {{absolute_path("justfile")}} backup-s3 {{dir}} {{from_bucket}} {{handle}}
+    cd {{dir}}
+    aws s3 sync backup/{{handle}}.{{ts}}/ s3://{{to_bucket}}/{{handle}}.{{ts}}/
+
 # Update rust toolchain for all supported versions
 update_rust:
     rustup update
@@ -199,6 +236,20 @@ update_rust:
         just -f {{absolute_path("log.justfile")}} info "Updating rustc v${rust_version}"; \
         cargo +$rust_version version 2>&1 > /dev/null || rustup toolchain install $rust_version; \
     done
+
+# Invalidate AWS CloudFront cache
+web-cache-invalidate dir distribution *FLAGS:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    cd {{dir}}
+    aws cloudfront create-invalidation --distribution-id {{distribution}} --paths '/*'
+
+_build-target dir target *FLAGS:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    just -f {{absolute_path("log.justfile")}} info "Building for {{target}}"
+    cd {{dir}}
+    just -f {{absolute_path("justfile")}} build {{dir}} --release --target {{target}} {{FLAGS}}
 
 _stage_artifact dir tag arch bin:
     #!/usr/bin/env bash
