@@ -35,20 +35,28 @@ build-apple-x86 dir *FLAGS: check_toolchain
     just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-apple-darwin {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit ARMv8 (AArch64) ISA (e.g., AWS Graviton)
-build-linux-arm-gnu dir *FLAGS: check_toolchain 
-    just -f {{absolute_path("justfile")}} _build-target {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
+build-linux-arm-gnu dir *FLAGS: check_toolchain
+    CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
+    CXX_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-g++ \
+        just -f {{absolute_path("justfile")}} _build-target {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
-build-linux-armv7-gnu dir *FLAGS: check_toolchain 
+build-linux-armv7-gnu dir *FLAGS: check_toolchain
+    CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
+    CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
     just -f {{absolute_path("justfile")}} _build-target {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit x86 (amd64) ISA (e.g., Intel/AMD PCs)
-build-linux-x86-gnu dir *FLAGS: check_toolchain 
-    just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
+build-linux-x86-gnu dir *FLAGS: check_toolchain
+    CC_x64_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-gcc \
+    CXX_x64_64_unknown_linux_gnu=x64_64-unknown-linux-gnu-g++ \
+        just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
 build-windows-x86-gnu dir *FLAGS: check_toolchain 
-    just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
+    CC_x64_64_unknown_linux_gnu=x86_64-w64-mingw32-gcc \
+    CXX_x64_64_unknown_linux_gnu=x86_64-w64-mingw32-g++ \
+        just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
 
 # Run all lints and tests
 check dir: check_toolchain
