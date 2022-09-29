@@ -223,7 +223,7 @@ publish-bins dir:
 
 # Create a timestamped snapshot of an s3 bucket in a different bucket
 snapshot-s3 dir from_bucket to_bucket handle:
-     #!/usr/bin/env bash
+    #!/usr/bin/env bash
     set -euxo pipefail
     just -f {{absolute_path("justfile")}} backup-s3 {{dir}} {{from_bucket}} {{handle}}
     cd {{dir}}
