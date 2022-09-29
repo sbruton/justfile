@@ -158,10 +158,10 @@ deploy-web ts dir subdir bucket distribution:
     just -f {{absolute_path("justfile")}} web-cache-invalidate {{ts}} {{dir}} {{distribution}}
 
 # Update infrastructure using terraform
-infra ts dir *FLAGS:
+infra ts dir subdir *FLAGS:
     just -f {{absolute_path("justfile")}} check_terraform {{ts}} {{dir}}
-    cd {{dir}} && terraform init
-    cd {{dir}} && terraform apply {{FLAGS}}
+    cd {{dir}}/{{subdir}} && terraform init
+    cd {{dir}}/{{subdir}} && terraform apply {{FLAGS}}
 
 # Install homebrew using direct download (macos only)
 install_brew ts dir:
@@ -199,10 +199,10 @@ install_semver ts dir:
     cargo install trunk
 
 # Publish Amazon Machine Image to all US regions
-publish-ami-us ts dir artifact tag:
+publish-ami-us ts dir subdir artifact tag:
     #!/usr/bin/env bash
     set -euxo pipefail
-    cd {{dir}}
+    cd {{dir}}/{{subdir}}
     artifact="{{artifact}}"
     packer init .
     packer fmt .
