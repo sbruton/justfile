@@ -1,5 +1,5 @@
 # minimum rustc version supported
-_rust_min := "1.60.0"
+_rust_min := "1.64.0"
 
 # Backup an S3 bucket
 backup-s3 ts dir bucket handle:
