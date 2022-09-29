@@ -60,9 +60,10 @@ build-linux-x86-gnu ts dir *FLAGS: check_toolchain
         just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
 # Build for VMs providing a WASM32 ISA (e.g., web browsers)
-build-wasm32 ts dir *FLAGS: check_toolchain
+build-wasm32 ts dir *FLAGS:
     #!/usr/bin/env bash
     set -euxo pipefail
+    just -f {{absolute_path("justfile")}} check_toolchain {{ts}} {{dir}}
     cd {{dir}}
     trunk build --release {{FLAGS}}
 
@@ -76,7 +77,8 @@ build-windows-x86-gnu ts dir *FLAGS: check_toolchain
         just -f {{absolute_path("justfile")}} _build-target {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
 
 # Run all lints and tests
-check ts dir: check_toolchain
+check ts dir:
+    just -f {{absolute_path("justfile")}} check_toolchain {{ts}} {{dir}}
     @for rust_version in $(semver seq --minor --minor-max 100 {{_rust_min}} `rustc --version | awk '{print $2}'`); do \
         just -f {{absolute_path("log.justfile")}} info "Checking rustc v${rust_version}"; \
         cargo +$rust_version check; \
@@ -149,7 +151,8 @@ deploy-web ts dir subdir bucket distribution:
     just -f {{absolute_path("justfile")}} web-cache-invalidate {{ts}} {{dir}} {{distribution}}
 
 # Update infrastructure using terraform
-infra ts dir *FLAGS: check_terraform
+infra ts dir *FLAGS:
+    just -f {{absolute_path("justfile")}} check_terraform {{ts}} {{dir}}
     cd {{dir}} && terraform init
     cd {{dir}} && terraform apply {{FLAGS}}
 
