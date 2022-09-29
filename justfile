@@ -74,7 +74,8 @@ build-wasm32 ts dir *FLAGS:
     trunk build --release {{FLAGS}}
 
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
-build-windows-x86-gnu ts dir *FLAGS: check_toolchain
+build-windows-x86-gnu ts dir *FLAGS:
+    just -f {{absolute_path("justfile")}} check_toolchain {{ts}} {{dir}}
     CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc \
     AR_x86_64_pc_windows_gnu=x86_64-w64-mingw32-ar \
     CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc \
