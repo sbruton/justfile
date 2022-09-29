@@ -11,7 +11,14 @@ See the [`justfile`] for all the available methods.
 For a real project that uses this justfile method collection, check out [`semver-util`].
 
 ```sh
-# sync shared justfile
+# Timestamp when just action executed, use gdate from brew:coreutils on macos
+ts := `gdate -u +%Y-%m-%dT%H:%M:%S.%6NZ || date -u +%Y-%m-%dT%H:%M:%S.%6NZ`
+
+# Run a method from shared justfile
+@_shared cmd *FLAGS: _sync
+    just -f .cache/justfile {{cmd}} {{ts}} `pwd`
+
+# Sync shared justfile
 _sync:
     if [[ ! -d .cache ]]; then \
         mkdir .cache; \
@@ -34,13 +41,13 @@ _sync:
     fi
 ```
 
-and then you can simply add `_sync` as a pre-requisite to any just command that will use the shared functions
+and then you can simply use the `_shared` command as a proxy for shared methods
 
 **Automate a build of all common OS targets**
 
 ```sh
-build-all: _sync
-  just -f .cache/justfile build-all `pwd`
+build-all:
+    just _shared build-all
 ```
 
 [`just`]: https://github.com/casey/just
