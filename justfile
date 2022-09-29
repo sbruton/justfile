@@ -36,16 +36,16 @@ build-apple-x86 dir *FLAGS: check_toolchain
 
 # Build for GNU/Linux targeting the 64-bit ARMv8 (AArch64) ISA (e.g., AWS Graviton)
 build-linux-arm-gnu dir *FLAGS: check_toolchain
-    CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc \
-    AR_x86_64_unknown_linux_gnu=aarch64-unknown-linux-gnu-ar \
+    CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc \
+    AR_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-ar \
     CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
     CXX_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-g++ \
         just -f {{absolute_path("justfile")}} _build-target {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
 build-linux-armv7-gnu dir *FLAGS: check_toolchain
-    CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=armv7-unknown-linux-gnueabihf-gcc \
-    AR_x86_64_unknown_linux_gnu=armv7-unknown-linux-gnueabihf-ar \
+    CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=armv7-unknown-linux-gnueabihf-gcc \
+    AR_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-ar \
     CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
     CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
     just -f {{absolute_path("justfile")}} _build-target {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
@@ -60,7 +60,7 @@ build-linux-x86-gnu dir *FLAGS: check_toolchain
 
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
 build-windows-x86-gnu dir *FLAGS: check_toolchain
-    CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=x86_64-w64-mingw32-gcc \
+    CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc \
     AR_x86_64_unknown_linux_gnu=x86_64-w64-mingw32-ar \
     CC_x64_64_unknown_linux_gnu=x86_64-w64-mingw32-gcc \
     CXX_x64_64_unknown_linux_gnu=x86_64-w64-mingw32-g++ \
