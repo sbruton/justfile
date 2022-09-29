@@ -76,7 +76,7 @@ check dir: check_toolchain
 @check_rust:
     just -f {{absolute_path("log.justfile")}} info "Checking for rust"
     type rustc 2>&1 > /dev/null || just install_rust
-    semver compare `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust
+    semver compare `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust || true 2>&1 > /dev/null
 
 # Install semver if missing
 @check_semver:
