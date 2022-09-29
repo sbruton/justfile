@@ -140,7 +140,7 @@ deploy-web dir bucket distribution:
     set -euxo pipefail
     cd {{dir}}
     trunk build --release
-    just -f {{absolute_path("justfile")}} snapshot-s3 {{dir}}
+    just -f {{absolute_path("justfile")}} snapshot-s3 {{dir}} {{bucket}} {{bucket}}-snapshot 
     aws s3 sync dist/ s3://{{bucket}}/
     just -f {{absolute_path("justfile")}} web-cache-invalidate {{dir}} {{distribution}}
 
@@ -225,12 +225,12 @@ publish-bins dir:
     gh release upload $tag dist/*
 
 # Create a timestamped snapshot of an s3 bucket in a different bucket
-snapshot-s3 dir from_bucket to_bucket handle:
+snapshot-s3 dir from_bucket to_bucket:
     #!/usr/bin/env bash
     set -euxo pipefail
     just -f {{absolute_path("justfile")}} backup-s3 {{dir}} {{from_bucket}} {{handle}}
     cd {{dir}}
-    aws s3 sync backup/{{handle}}.{{ts}}/ s3://{{to_bucket}}/{{handle}}.{{ts}}/
+    aws s3 sync backup/{{from_bucket}}.{{ts}}/ s3://{{to_bucket}}/{{from_bucket}}.{{ts}}/
 
 # Update rust toolchain for all supported versions
 update_rust:
