@@ -112,7 +112,7 @@ check ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for rust"
     type rustc 2>&1 > /dev/null || just install_rust
     type cargo-next 2>&1 > /dev/null || cargo install --locked cargo-next
-    semver compare `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust || true 2>&1 > /dev/null
+    semver cmp `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust || true 2>&1 > /dev/null
 
 # Install semver if missing
 @check_semver ts dir:
@@ -219,7 +219,7 @@ publish-ami-us ts dir subdir artifact tag:
 publish-bins ts dir:
     #!/usr/bin/env bash
     set -euxo pipefail
-    just build-all {{dir}}
+    just build-all {{ts}} {{dir}}
     cd {{dir}}
     tag=`git describe --tag`
     if [[ -d dist ]]; then rm -rf dist; fi
