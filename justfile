@@ -28,27 +28,27 @@ _build-target dir target *FLAGS:
 
 # Build for Apple macOS targeting the 64-bit Apple ISA (e.g., Apple Silicon Macs)
 build-apple-arm dir *FLAGS: check_toolchain 
-    just _build-taget {{dir}} aarch64-apple-darwin {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-taget {{dir}} aarch64-apple-darwin {{FLAGS}}
 
 # Build for Apple macOS targeting the 64-bit x86 (amd64) ISA (e.g., Legacy Intel Macs)
 build-apple-x86 dir *FLAGS: check_toolchain 
-    just _build-taget {{dir}} x86_64-apple-darwin {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-taget {{dir}} x86_64-apple-darwin {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit ARMv8 (AArch64) ISA (e.g., AWS Graviton)
 build-linux-arm-gnu dir *FLAGS: check_toolchain 
-    just _build-taget {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-taget {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
 build-linux-armv7-gnu dir *FLAGS: check_toolchain 
-    just _build-taget {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-taget {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit x86 (amd64) ISA (e.g., Intel/AMD PCs)
 build-linux-x86-gnu dir *FLAGS: check_toolchain 
-    just _build-taget {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-taget {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Windows targeting the 64-bit x86 (amd64) ISA (e.g, Intel/AMD PCs)
 build-windows-x86-gnu dir *FLAGS: check_toolchain 
-    just _build-taget {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
+    just -f {{absolute_path("justfile")}} _build-taget {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
 
 # Run all lints and tests
 check dir: check_toolchain
