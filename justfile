@@ -9,7 +9,7 @@ backup-s3 dir bucket handle:
     #!/usr/bin/env bash
     set -euxo pipefail
     cd {{dir}}
-    mkdir -p backup/web.{{ts}}
+    mkdir -p backup/{{handle}}.{{ts}}
     aws s3 sync s3://{{bucket}}/ backup/{{handle}}.{{ts}}/
 
 # Build for local target
