@@ -135,10 +135,10 @@ clean dir:
     if [[ -d dist ]]; then rm -rf dist; fi
 
 # Deploy a web app to AWS S3 and CloudFront
-deploy-web dir bucket distribution:
+deploy-web dir subdir bucket distribution:
     #!/usr/bin/env bash
     set -euxo pipefail
-    cd {{dir}}
+    cd {{dir}}/{{subdir}}
     trunk build --release
     just -f {{absolute_path("justfile")}} snapshot-s3 {{dir}} {{bucket}} {{bucket}}-snapshot 
     aws s3 sync dist/ s3://{{bucket}}/
