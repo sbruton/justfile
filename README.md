@@ -4,6 +4,12 @@ This crate contains a bunch of utility methods for automating rust development a
 
 You can incorporate it into your project's local `justfile` by adding this hidden method.
 
+## Examples
+
+See the [`justfile`] for all the available methods.
+
+For a real project that uses this justfile method collection, check out [`semver-util`].
+
 ```sh
 # sync shared justfile
 _sync:
@@ -37,7 +43,6 @@ build-all: _sync
   just -f .cache/justfile build-all `pwd`
 ```
 
-See the [`justfile`] for all the available methods.
-
 [`just`]: https://github.com/casey/just
 [`justfile`]: justfile
+[`semver-util`]: https://github.com/sbruton/semver-util
