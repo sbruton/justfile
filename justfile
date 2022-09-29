@@ -92,52 +92,52 @@ check ts dir:
     done
 
 # Install Homebrew if missing (macos only)
-@check_brew ts dir:
+@check-brew ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for homebrew"
-    type brew 2>&1 > /dev/null || just install_brew
+    type brew 2>&1 > /dev/null || just install-brew
     if [[ "{{os()}}" == "macos" ]]; then type gdate 2>&1 > /dev/null || brew install coreutils; fi
 
 # Install GitHub CLI if missing
-@check_gh ts dir:
+@check-gh ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for github cli"
-    type gh 2>&1 > /dev/null || just install_gh
+    type gh 2>&1 > /dev/null || just install-gh
 
 # Install packer if missing
-@check_packer ts dir:
+@check-packer ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for packer"
-    type packer 2>&1 > /dev/null || just install_packer
+    type packer 2>&1 > /dev/null || just install-packer
 
 # Install Rust if missing
-@check_rust ts dir:
+@check-rust ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for rust"
-    type rustc 2>&1 > /dev/null || just install_rust
+    type rustc 2>&1 > /dev/null || just install-rust
     type cargo-next 2>&1 > /dev/null || cargo install --locked cargo-next
-    semver cmp `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update_rust || true 2>&1 > /dev/null
+    semver cmp `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update-rust || true 2>&1 > /dev/null
 
 # Install semver if missing
-@check_semver ts dir:
+@check-semver ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for semver"
-    type semver 2>&1 > /dev/null || just install_semver
+    type semver 2>&1 > /dev/null || just install-semver
 
 # Install terraform if missing
-@check_terraform ts dir:
+@check-terraform ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for terraform"
-    type terraform 2>&1 > /dev/null || just install_terraform
+    type terraform 2>&1 > /dev/null || just install-terraform
 
 # Install trunk if missing
-@check_trunk ts dir:
+@check-trunk ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for trunk"
-    type trunk 2>&1 > /dev/null || just install_trunk
+    type trunk 2>&1 > /dev/null || just install-trunk
 
 # Check entire toolchain and install all missing components
 @check_toolchain ts dir:
-    just -f {{absolute_path("justfile")}} check_brew {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} check_gh {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} check_rust {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} check_packer {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} check_terraform {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} check_semver {{ts}} {{dir}}
-    just -f {{absolute_path("justfile")}} check_trunk {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-brew {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-gh {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-rust {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-packer {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-terraform {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-semver {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-trunk {{ts}} {{dir}}
 
 # Remove all build artifacts
 clean ts dir:
@@ -159,42 +159,42 @@ deploy-web ts dir subdir bucket distribution:
 
 # Update infrastructure using terraform
 infra ts dir subdir *FLAGS:
-    just -f {{absolute_path("justfile")}} check_terraform {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-terraform {{ts}} {{dir}}
     cd {{dir}}/{{subdir}} && terraform init
     cd {{dir}}/{{subdir}} && terraform apply {{FLAGS}}
 
 # Install homebrew using direct download (macos only)
-install_brew ts dir:
+install-brew ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install GitHub CLI using homebrew (macos) or apt (linux)
-@install_gh ts dir:
+@install-gh ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing github cli"
-    just -f {{os()}}.justfile install_gh
+    just -f {{os()}}.justfile install-gh
 
 # Install packer using homebrew (macos) or apt (linux)
-@install_packer ts dir:
+@install-packer ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing packer"
     just -f {{os()}}.justfile install_just
 
 # Install Rust via rustup using homebrew (macos) or direct download (linux)
-@install_rust ts dir:
+@install-rust ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing rust"
-    just -f {{os()}}.justfile install_rust
+    just -f {{os()}}.justfile install-rust
 
 # Install semver cli utility using cargo
-install_semver ts dir:
+install-semver ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing semver"
     cargo install semver-util
 
 # Install terraform using homebrew (macos) or apt (linux)
-@install_terraform ts dir:
+@install-terraform ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing terraform"
-    just -f {{os()}}.justfile install_terraform
+    just -f {{os()}}.justfile install-terraform
 
 # Install trunk using cargo
-@install_trunk ts dir:
+@install-trunk ts dir:
     just -f {{absolute_path("log.justfile")}} info "Installing trunk"
     cargo install trunk
 
@@ -247,7 +247,7 @@ snapshot-s3 ts dir from_bucket to_bucket:
     aws s3 sync backup/{{from_bucket}}.{{ts}}/ s3://{{to_bucket}}/{{from_bucket}}.{{ts}}/
 
 # Update rust toolchain for all supported versions
-update_rust ts dir:
+update-rust ts dir:
     rustup update
     @for rust_version in $(semver seq --minor --minor-max 100 {{_rust_min}} `rustc --version | awk '{print $2}'`); do \
         just -f {{absolute_path("log.justfile")}} info "Updating rustc v${rust_version}"; \
@@ -268,7 +268,7 @@ _build-target ts dir target *FLAGS:
     cd {{dir}}
     just -f {{absolute_path("justfile")}} build {{ts}} {{dir}} --release --target {{target}} {{FLAGS}}
 
-_stage_artifact ts dir tag arch bin:
+_stage-artifact ts dir tag arch bin:
     #!/usr/bin/env bash
     set -euxo pipefail
     cd {{dir}}
@@ -280,24 +280,24 @@ _stage_artifact ts dir tag arch bin:
         cp target/{{arch}}/release/{{bin}} dist/$dist
     fi
 
-_stage_bin ts dir tag index arch:
+_stage-bin ts dir tag index arch:
     #!/usr/bin/env bash
     set -euxo pipefail
     cd {{dir}}
-    just -f {{absolute_path("justfile")}} _stage_artifact {{ts}} {{dir}} {{tag}} {{arch}} `cargo-config config bin.{{index}}.name | sed -e 's/"//g'`
+    just -f {{absolute_path("justfile")}} _stage-artifact {{ts}} {{dir}} {{tag}} {{arch}} `cargo-config config bin.{{index}}.name | sed -e 's/"//g'`
     
-_stage_win ts dir tag index arch:
+_stage-win ts dir tag index arch:
     #!/usr/bin/env bash
     set -euxo pipefail
     cd {{dir}}
-    just -f {{absolute_path("justfile")}} _stage_artifact {{ts}} {{dir}} {{tag}} {{arch}} `cargo-config config bin.{{index}}.name | sed -e 's/"//g'`
+    just -f {{absolute_path("justfile")}} _stage-artifact {{ts}} {{dir}} {{tag}} {{arch}} `cargo-config config bin.{{index}}.name | sed -e 's/"//g'`
 
 @_stage ts dir tag index:
     #!/usr/bin/env bash
     set -euxo pipefail
     cd {{dir}}
-    just -f {{absolute_path("justfile")}} _stage_bin {{ts}} {{dir}} {{tag}} {{index}} aarch64-apple-darwin
-    just -f {{absolute_path("justfile")}} _stage_bin {{ts}} {{dir}} {{tag}} {{index}} aarch64-unknown-linux-gnu
-    just -f {{absolute_path("justfile")}} _stage_bin {{ts}} {{dir}} {{tag}} {{index}} x86_64-apple-darwin
-    just -f {{absolute_path("justfile")}} _stage_bin {{ts}} {{dir}} {{tag}} {{index}} x86_64-unknown-linux-gnu
-    just -f {{absolute_path("justfile")}} _stage_win {{ts}} {{dir}} {{tag}} {{index}} x86_64-pc-windows-gnu
+    just -f {{absolute_path("justfile")}} _stage-bin {{ts}} {{dir}} {{tag}} {{index}} aarch64-apple-darwin
+    just -f {{absolute_path("justfile")}} _stage-bin {{ts}} {{dir}} {{tag}} {{index}} aarch64-unknown-linux-gnu
+    just -f {{absolute_path("justfile")}} _stage-bin {{ts}} {{dir}} {{tag}} {{index}} x86_64-apple-darwin
+    just -f {{absolute_path("justfile")}} _stage-bin {{ts}} {{dir}} {{tag}} {{index}} x86_64-unknown-linux-gnu
+    just -f {{absolute_path("justfile")}} _stage-win {{ts}} {{dir}} {{tag}} {{index}} x86_64-pc-windows-gnu
