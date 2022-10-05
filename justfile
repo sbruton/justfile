@@ -37,7 +37,8 @@ build-apple-x86 ts dir *FLAGS:
 
 # Build for GNU/Linux targeting the 64-bit ARMv8 (AArch64) ISA (e.g., AWS Graviton)
 build-linux-arm-gnu ts dir *FLAGS:
-    just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}}
+    just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}} 
+    rustup target add aarch64-unknown-linux-gnu
     CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc \
     AR_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-ar \
     CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
