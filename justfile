@@ -94,40 +94,40 @@ check ts dir:
 # Install Homebrew if missing (macos only)
 @check-brew ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for homebrew"
-    type brew 2>&1 > /dev/null || just install-brew
+    type brew 2>&1 > /dev/null || just install-brew {{ts}} {{dir}}
     if [[ "{{os()}}" == "macos" ]]; then type gdate 2>&1 > /dev/null || brew install coreutils; fi
 
 # Install GitHub CLI if missing
 @check-gh ts dir:
-    just -f {{absolute_path("log.justfile")}} info "Checking for github cli"
-    type gh 2>&1 > /dev/null || just install-gh
+    just -f {{absolute_path("log.justfile")}} info "Checking for github cli" 
+    type gh 2>&1 > /dev/null || just install-gh {{ts}} {{dir}}
 
 # Install packer if missing
 @check-packer ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for packer"
-    type packer 2>&1 > /dev/null || just install-packer
+    type packer 2>&1 > /dev/null || just install-packer {{ts}} {{dir}}
 
 # Install Rust if missing
 @check-rust ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for rust"
-    type rustc 2>&1 > /dev/null || just install-rust
+    type rustc 2>&1 > /dev/null || just install-rust {{ts}} {{dir}}
     type cargo-next 2>&1 > /dev/null || cargo install --locked cargo-next
     semver cmp `rustc --version | awk '{print $2}'` lt 1.64.0 2>&1 > /dev/null && just update-rust || true 2>&1 > /dev/null
 
 # Install semver if missing
 @check-semver ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for semver"
-    type semver 2>&1 > /dev/null || just install-semver
+    type semver 2>&1 > /dev/null || just install-semver {{ts}} {{dir}}
 
 # Install terraform if missing
 @check-terraform ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for terraform"
-    type terraform 2>&1 > /dev/null || just install-terraform
+    type terraform 2>&1 > /dev/null || just install-terraform {{ts}} {{dir}}
 
 # Install trunk if missing
 @check-trunk ts dir:
     just -f {{absolute_path("log.justfile")}} info "Checking for trunk"
-    type trunk 2>&1 > /dev/null || just install-trunk
+    type trunk 2>&1 > /dev/null || just install-trunk {{ts}} {{dir}}
 
 # Check entire toolchain and install all missing components
 @check-toolchain ts dir:
