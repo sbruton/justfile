@@ -39,6 +39,8 @@ build-apple-x86 ts dir *FLAGS:
 build-linux-arm-gnu ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}} 
     rustup target add aarch64-unknown-linux-gnu
+    brew tap messense/macos-cross-toolchains
+    brew install aarch64-unknown-linux-gnu
     CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc \
     AR_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-ar \
     CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
