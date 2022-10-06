@@ -51,6 +51,9 @@ build-linux-arm-gnu ts dir *FLAGS:
 # Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
 build-linux-armv7-gnu ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}}
+    rustup target add armv7-unknown-linux-gnueabihf
+    brew tap messense/macos-cross-toolchains
+    brew install armv7-unknown-linux-gnueabihf
     CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=armv7-unknown-linux-gnueabihf-gcc \
     AR_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-ar \
     CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
