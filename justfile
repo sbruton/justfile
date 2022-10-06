@@ -48,7 +48,7 @@ build-linux-arm-gnu ts dir *FLAGS:
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
     just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
 
-# Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
+# Build for GNU/Linux targeting the 64-bit ARMv7 ISA (e.g., Raspberry Pi)
 build-linux-armv7-gnu ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}}
     rustup target add armv7-unknown-linux-gnueabihf
@@ -60,6 +60,19 @@ build-linux-armv7-gnu ts dir *FLAGS:
     CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
     just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
+
+# Build for GNU/Linux targeting the 32-bit ARMv6 ISA (e.g., Raspberry Pi)
+build-linux-armv6-gnu ts dir *FLAGS:
+    just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}}
+    rustup target add arm-unknown-linux-gnueabihf
+    brew tap messense/macos-cross-toolchains
+    brew install arm-unknown-linux-gnueabihf
+    CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-unknown-linux-gnueabihf-gcc \
+    AR_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-ar \
+    CC_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-gcc \
+    CXX_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-g++ \
+    RUSTFLAGS="-C link-arg=-Wl,--build-id" \
+    just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} arm-unknown-linux-gnueabihf {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit x86 (amd64) ISA (e.g., Intel/AMD PCs)
 build-linux-x86-gnu ts dir *FLAGS:
