@@ -56,7 +56,7 @@ build-linux-armv7-gnu ts dir *FLAGS:
     brew install armv7-unknown-linux-gnueabihf
     CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=armv7-unknown-linux-gnueabihf-gcc \
     AR_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-ar \
-    CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
+    CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \
     CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
     just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
