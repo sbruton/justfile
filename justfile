@@ -42,10 +42,10 @@ build-linux-arm-gnu ts dir *FLAGS:
     brew tap messense/macos-cross-toolchains
     brew install aarch64-unknown-linux-gnu
     CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-unknown-linux-gnu-gcc \
-    AR_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-ar \
-    CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
-    CXX_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-g++ \
-    RUSTFLAGS="-C link-arg=-Wl,--build-id" \
+        AR_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-ar \
+        CC_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-gcc \
+        CXX_aarch64_unknown_linux_gnu=aarch64-unknown-linux-gnu-g++ \
+        RUSTFLAGS="-C link-arg=-Wl,--build-id" \
         just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} aarch64-unknown-linux-gnu {{FLAGS}}
 
 # Build for GNU/Linux targeting the 32-bit ARMv7 ISA (e.g., Raspberry Pi)
@@ -55,20 +55,20 @@ build-linux-armv7-gnu ts dir *FLAGS:
     brew tap messense/macos-cross-toolchains
     brew install armv7-unknown-linux-gnueabihf
     CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=armv7-unknown-linux-gnueabihf-gcc \
-    AR_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-ar \
-    CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
-    CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
-    RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-    just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
+        AR_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-ar \
+        CC_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-gcc \ 
+        CXX_armv7_unknown_linux_gnueabihf=armv7-unknown-linux-gnueabihf-g++ \
+        RUSTFLAGS="-C link-arg=-Wl,--build-id" \
+        just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} armv7-unknown-linux-gnueabihf {{FLAGS}}
 
 # Build for GNU/Linux targeting the 64-bit x86 (amd64) ISA (e.g., Intel/AMD PCs)
 build-linux-x86-gnu ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}}
     CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=x86_64-unknown-linux-gnu-gcc \
-    AR_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-ar \
-    CC_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-gcc \
-    CXX_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-g++ \
-    RUSTFLAGS="-C link-arg=-Wl,--build-id" \
+        AR_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-ar \
+        CC_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-gcc \
+        CXX_x86_64_unknown_linux_gnu=x86_64-unknown-linux-gnu-g++ \
+        RUSTFLAGS="-C link-arg=-Wl,--build-id" \
         just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} x86_64-unknown-linux-gnu {{FLAGS}}
 
 # Build for VMs providing a WASM32 ISA (e.g., web browsers)
@@ -83,10 +83,10 @@ build-wasm32 ts dir *FLAGS:
 build-windows-x86-gnu ts dir *FLAGS:
     just -f {{absolute_path("justfile")}} check-toolchain {{ts}} {{dir}}
     CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc \
-    AR_x86_64_pc_windows_gnu=x86_64-w64-mingw32-ar \
-    CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc \
-    CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++ \
-    RUSTFLAGS="-C link-arg=-Wl,--build-id" \
+        AR_x86_64_pc_windows_gnu=x86_64-w64-mingw32-ar \
+        CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc \
+        CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++ \
+        RUSTFLAGS="-C link-arg=-Wl,--build-id" \
         just -f {{absolute_path("justfile")}} _build-target {{ts}} {{dir}} x86_64-pc-windows-gnu {{FLAGS}}
 
 # Run all lints and tests
