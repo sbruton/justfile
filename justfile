@@ -229,7 +229,7 @@ package-linux-armv6-gnu-deb ts dir *FLAGS:
     CC_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-gcc \
     CXX_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-    cargo deb -v --target arm-unknown-linux-gnueabihf {{FLAGS}}
+    cargo deb -v --target armhf-unknown-linux-gnueabihf {{FLAGS}}
 
 # Publish Amazon Machine Image to all US regions
 publish-ami-us ts dir subdir artifact tag:
