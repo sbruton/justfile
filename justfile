@@ -223,12 +223,13 @@ package-linux-armv6-gnu-deb ts dir *FLAGS:
     rustup target add arm-unknown-linux-gnueabihf
     brew tap messense/macos-cross-toolchains
     brew install arm-unknown-linux-gnueabihf
+    cd {{dir}} && \
     CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-unknown-linux-gnueabihf-gcc \
     AR_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-ar \
     CC_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-gcc \
     CXX_arm_unknown_linux_gnueabihf=arm-unknown-linux-gnueabihf-g++ \
     RUSTFLAGS="-C link-arg=-Wl,--build-id" \
-    cd {{dir}} && cargo deb -v --target arm-unknown-linux-gnueabihf {{FLAGS}}
+    cargo deb -v --target arm-unknown-linux-gnueabihf {{FLAGS}}
 
 # Publish Amazon Machine Image to all US regions
 publish-ami-us ts dir subdir artifact tag:
