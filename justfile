@@ -234,6 +234,7 @@ package-linux-armv6-gnu-deb ts dir *FLAGS:
 # Publish Amazon Machine Image to all US regions
 publish-ami-us ts dir subdir artifact tag:
     #!/usr/bin/env bash
+    ulimit -n 10240
     set -euxo pipefail
     cd {{dir}}/{{subdir}}
     artifact="{{artifact}}"
